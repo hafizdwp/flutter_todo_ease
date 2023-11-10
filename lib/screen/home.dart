@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(0),
                 child: Container(
                   decoration: BoxDecoration(),
                   child: Column(
