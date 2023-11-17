@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widget/todo_lists.dart';
 import 'add_bottomsheet_screen.dart';
@@ -33,8 +34,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> savedTodos = [];
+
   Widget addTodoBottomSheet(BuildContext context) {
-    return const AddBottomSheetScreen();
+    return AddBottomSheetScreen(onItemAdded: () async {
+      final prefs = await SharedPreferences.getInstance();
+
+      List<String> savedTodos = prefs.getStringList('todos') ?? [];
+      this.savedTodos.clear();
+      this.savedTodos.addAll(savedTodos);
+    });
+  }
+
+  @override
+  Future<void> initState() async {
+    // TODO: implement initState
+    super.initState();
+
+    final prefs = await SharedPreferences.getInstance();
+
+    this.savedTodos.clear();
+    this.savedTodos.addAll(prefs.getStringList('todos'));
   }
 
   @override
@@ -95,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           topLeft: Radius.circular(16),
                           topRight: Radius.circular(16)),
                       color: Colors.white),
-                  child: TodoLists(),
+                  child: TodoLists(savedTodos: savedTodos),
                 ))
           ],
         ),

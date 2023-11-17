@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:todo_ease/widget/todo_tile.dart';
+
+import '../model/Todo.dart';
 
 class TodoLists extends StatefulWidget {
+  final List<String> savedTodos;
+
   const TodoLists({
     super.key,
+    required this.savedTodos,
   });
 
   @override
@@ -10,39 +16,24 @@ class TodoLists extends StatefulWidget {
 }
 
 class _TodoListsState extends State<TodoLists> {
-  List<String> itemList = List.generate(5, (index) => "List Todo ${index + 1}");
+
+  List<Todo> todos = [
+    Todo(name: "List 1"),
+    Todo(name: "List 2"),
+    Todo(name: "List 3")
+  ];
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: itemList.length,
+        itemCount: widget.savedTodos.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              itemList[index],
-              style: TextStyle(
-                  decoration: itemList[index].isEmpty
-                      ? TextDecoration.lineThrough
-                      : null),
-            ),
-            trailing: Checkbox(
-              value: false,
-              onChanged: (bool? value) {
-                setState(() {
-                  if (value == true) {
-                    setState(() {
-                      itemList.removeAt(index);
-                    });
-                  }
-                });
-              },
-            ),
-            onTap: () {
-              setState(() {
-                itemList.removeAt(index);
+          return TodoTile(
+              isChecked: todos[index].isDone,
+              todoTitle: todos[index].name,
+              checkBoxCallback: (checkBoxState) {
+                
               });
-            },
-          );
         });
   }
 }

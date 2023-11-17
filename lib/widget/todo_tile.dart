@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 
-class TodoTile extends StatefulWidget {
-  final int number;
+class TodoTile extends StatelessWidget {
+  final bool isChecked;
+  final String todoTitle;
+  final Function checkBoxCallback;
 
-  TodoTile({super.key, required this.number});
+  TodoTile(
+      {super.key,
+      required this.isChecked,
+      required this.todoTitle,
+      required this.checkBoxCallback});
 
-  @override
-  State<TodoTile> createState() => _TodoTileState();
-}
-
-class _TodoTileState extends State<TodoTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text("List Todo ${widget.number}"),
-      trailing: Checkbox(
-        value: false,
-        onChanged: (bool? value) {
-          setState(() {
-            if (value == true) {
-
-            }
-          });
-        },
-      ),
-    );
+        title: Text(todoTitle),
+        trailing: Checkbox(
+          value: isChecked,
+          onChanged: (newValue) {
+            checkBoxCallback(newValue);
+          },
+        ));
   }
 }
