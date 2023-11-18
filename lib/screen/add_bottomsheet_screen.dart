@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_ease/model/TodoData.dart';
+import 'package:todo_ease/model/TodoPref.dart';
 
 class AddBottomSheetScreen extends StatelessWidget {
   final TextEditingController _textEditingController = TextEditingController();
 
   void onAddTodoButton(BuildContext context) {
-    Provider.of<TodoData>(context, listen: false)
+    Provider.of<TodoPref>(context, listen: false)
         .addTodo(_textEditingController.text);
     Navigator.pop(context);
   }

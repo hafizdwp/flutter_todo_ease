@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_ease/model/TodoPref.dart';
 
-import '../model/TodoData.dart';
 import '../widget/todo_lists.dart';
 import 'add_bottomsheet_screen.dart';
 
@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => TodoData(),
+      create: (context) => TodoPref(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -82,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 40,
                               color: Colors.white)),
                       Text(
-                          "You have ${Provider.of<TodoData>(context).getCompletedTodosCount()} Tasks today!")
+                          // "You have ${Provider.of<TodoData>(context).getCompletedTodosCount()} Tasks today!")
+                          "You have ${Provider.of<TodoPref>(context).todos.length} tasks today!")
                     ],
                   ),
                 ),
