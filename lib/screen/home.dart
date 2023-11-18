@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
+import '../model/TodoData.dart';
 import '../widget/todo_lists.dart';
 import 'add_bottomsheet_screen.dart';
 
@@ -13,13 +14,16 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-          useMaterial3: true,
-          fontFamily: 'poppins'),
-      home: const HomeScreen(title: 'Todo Ease'),
+    return ChangeNotifierProvider(
+      create: (context) => TodoData(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+            useMaterial3: true,
+            fontFamily: 'poppins'),
+        home: const HomeScreen(title: 'Todo Ease'),
+      ),
     );
   }
 }
@@ -34,27 +38,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<String> savedTodos = [];
-
   Widget addTodoBottomSheet(BuildContext context) {
-    return AddBottomSheetScreen(onItemAdded: () async {
-      final prefs = await SharedPreferences.getInstance();
-
-      List<String> savedTodos = prefs.getStringList('todos') ?? [];
-      this.savedTodos.clear();
-      this.savedTodos.addAll(savedTodos);
-    });
-  }
-
-  @override
-  Future<void> initState() async {
-    // TODO: implement initState
-    super.initState();
-
-    final prefs = await SharedPreferences.getInstance();
-
-    this.savedTodos.clear();
-    this.savedTodos.addAll(prefs.getStringList('todos'));
+    return AddBottomSheetScreen();
   }
 
   @override
@@ -74,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         backgroundColor: Colors.blueAccent,
         shape: CircleBorder(),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SafeArea(
@@ -91,12 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text("Todo Ease",
+                      const Text("Todo Ease",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 40,
                               color: Colors.white)),
-                      Text("You have 10 Tasks today!")
+                      Text(
+                          "You have ${Provider.of<TodoData>(context).getCompletedTodosCount()} Tasks today!")
                     ],
                   ),
                 ),
@@ -115,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           topLeft: Radius.circular(16),
                           topRight: Radius.circular(16)),
                       color: Colors.white),
-                  child: TodoLists(savedTodos: savedTodos),
+                  child: TodoLists(),
                 ))
           ],
         ),

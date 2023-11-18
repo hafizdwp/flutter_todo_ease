@@ -1,28 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_ease/model/TodoData.dart';
 
-class AddBottomSheetScreen extends StatefulWidget {
-  final VoidCallback onItemAdded;
+class AddBottomSheetScreen extends StatelessWidget {
+  final TextEditingController _textEditingController = TextEditingController();
 
-  const AddBottomSheetScreen({super.key, required this.onItemAdded});
-
-  @override
-  State<AddBottomSheetScreen> createState() => _AddBottomSheetScreenState();
-}
-
-class _AddBottomSheetScreenState extends State<AddBottomSheetScreen> {
-  final TextEditingController _textController = TextEditingController();
-
-  void saveItemToSharedPref(String todo) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    List<String> savedTodos = prefs.getStringList('todos') ?? [];
-    savedTodos.add(todo);
-
-    prefs.setStringList('todos', savedTodos);
-
-    // callback
-    widget.onItemAdded();
+  void onAddTodoButton(BuildContext context) {
+    Provider.of<TodoData>(context, listen: false)
+        .addTodo(_textEditingController.text);
+    Navigator.pop(context);
   }
 
   @override
@@ -37,7 +23,7 @@ class _AddBottomSheetScreenState extends State<AddBottomSheetScreen> {
             child: Column(
               children: [
                 TextField(
-                  controller: _textController,
+                  controller: _textEditingController,
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
@@ -49,12 +35,7 @@ class _AddBottomSheetScreenState extends State<AddBottomSheetScreen> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          saveItemToSharedPref(_textController.text);
-                          Navigator.pop(context);
-                        });
-                      },
+                      onPressed: () => onAddTodoButton(context),
                       style: ElevatedButton.styleFrom(
                           shadowColor: Colors.green,
                           backgroundColor: Colors.blueAccent,

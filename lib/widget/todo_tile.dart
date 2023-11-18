@@ -5,7 +5,7 @@ class TodoTile extends StatelessWidget {
   final String todoTitle;
   final Function checkBoxCallback;
 
-  TodoTile(
+  const TodoTile(
       {super.key,
       required this.isChecked,
       required this.todoTitle,
@@ -13,13 +13,19 @@ class TodoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        title: Text(todoTitle),
-        trailing: Checkbox(
-          value: isChecked,
-          onChanged: (newValue) {
-            checkBoxCallback(newValue);
-          },
-        ));
+    return InkWell(
+      onTap: () => print("tapped"),
+      child: ListTile(
+          title: Text(todoTitle,
+              style: isChecked
+                  ? const TextStyle(decoration: TextDecoration.lineThrough)
+                  : null),
+          trailing: Checkbox(
+            value: isChecked,
+            onChanged: (newValue) {
+              checkBoxCallback(newValue);
+            },
+          )),
+    );
   }
 }
